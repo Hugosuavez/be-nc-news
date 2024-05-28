@@ -79,7 +79,7 @@ describe('GET /api/articles/:article_id', () => {
             })
         })
     })
-    test.only('404: Not Found', () => {
+    test('404: Not Found', () => {
         return request(app)
         .get('/api/articles/9999999')
         .expect(404)
@@ -87,12 +87,44 @@ describe('GET /api/articles/:article_id', () => {
             expect(body.msg).toBe("404: Not Found")
         })
     })
-    test.only('400: Bad Request', () => {
+    test('400: Bad Request', () => {
         return request(app)
         .get('/api/articles/biro')
         .expect(400)
         .then(({body}) => {
             expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+})
+
+describe('GET /api/articles', () => {
+    test('200: responds with array of article objects', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.articles).toHaveLength(13)
+            expect(body.articles).toBeSortedBy('created_at', {descending: true})
+            body.articles.forEach((article) => {
+                expect(article).toMatchObject({
+                    article_id: expect.any(Number),
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String),
+                    comment_count: expect.any(String)
+                })
+            })
+        })
+    })
+    test('404: route not found', () => {
+        return request(app)
+        .get('/api/invalid')
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe('404: Not Found')
         })
     })
 })

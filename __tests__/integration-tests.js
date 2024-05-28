@@ -3,6 +3,7 @@ const app = require('../app')
 const db = require('../db/connection')
 const seed = require('../db/seeds/seed')
 const data = require('../db/data/test-data/index')
+const endpointsData = require('../endpoints.json')
 
 
 afterAll(() => {
@@ -44,18 +45,15 @@ describe('GET /api', () => {
         .get('/api')
         .expect(200)
         .then(({body}) => {
-            const desiredEndpoints = {
-                description: expect.any(String),
-                queries: expect.any(Array),
-                exampleResponse: expect.any(Object),
-                requestFormat: expect.any(Object)
-            }
-
-            const parsedEndpoints = JSON.parse(body.endpoints)
-            
-            for(const key in parsedEndpoints){
-            expect(desiredEndpoints).toMatchObject(parsedEndpoints[key])
-        }
+            expect(body.endpoints).toEqual(endpointsData)
+        })
+    })
+    test('404: route not found', () => {
+        return request(app)
+        .get('/api/invalid')
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe('404: Not Found')
         })
     })
 })

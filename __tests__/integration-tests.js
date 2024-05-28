@@ -117,12 +117,42 @@ describe('GET /api/articles', () => {
             })
         })
     })
-    test('404: route not found', () => {
+})
+
+describe('GET /api/articles/:article_id/comments', () => {
+    test('200: responds with an array of comments for the given article_id', () => {
         return request(app)
-        .get('/api/invalid')
+        .get('/api/articles/3/comments')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comments).toHaveLength(2)
+            expect(body.comments).toBeSortedBy('created_at', {descending: false})
+            body.comments.forEach((comment) => {
+                expect(comment).toMatchObject({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    article_id: expect.any(Number)
+                })
+            })
+        })
+    })
+    test('400: Bad Request, invalid ID data type', () => {
+        return request(app)
+        .get('/api/articles/biro/comments')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+       test('404: Not Found, ID not in range', () => {
+        return request(app)
+        .get('/api/articles/9999999/comments')
         .expect(404)
         .then(({body}) => {
-            expect(body.msg).toBe('404: Not Found')
+            expect(body.msg).toBe("404: Not Found")
         })
     })
 })

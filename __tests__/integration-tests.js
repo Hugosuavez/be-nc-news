@@ -37,3 +37,25 @@ describe('GET /api/topics', () => {
         })
     })
 })
+
+describe('GET /api', () => {
+    test('200: responds with an object containing descriptions of all other endpoints', () => {
+        return request(app)
+        .get('/api')
+        .expect(200)
+        .then(({body}) => {
+            const desiredEndpoints = {
+                description: expect.any(String),
+                queries: expect.any(Array),
+                exampleResponse: expect.any(Object),
+                requestFormat: expect.any(Object)
+            }
+
+            const parsedEndpoints = JSON.parse(body.endpoints)
+            
+            for(const key in parsedEndpoints){
+            expect(desiredEndpoints).toMatchObject(parsedEndpoints[key])
+        }
+        })
+    })
+})

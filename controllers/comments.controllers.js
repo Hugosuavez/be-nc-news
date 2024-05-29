@@ -1,5 +1,5 @@
+const { fetchCommentsByArticleId, createCommentByArticleId, removeComment, fetchCommentByCommentId } = require('../models/comments.models')
 const { checkArticleExists } = require('../models/checkArticleExists.model')
-const { fetchCommentsByArticleId, createCommentByArticleId } = require('../models/comments.models')
 const { checkUserExists } = require('../models/users.models')
 
 
@@ -26,6 +26,23 @@ exports.postCommentByArticleId = (req, res, next) => {
     Promise.all(promises).then((resolvedPromises) => {
         const comment = resolvedPromises[2]
         res.status(201).send({comment})
+    })
+    .catch(next)
+}
+
+exports.deleteComment = (req, res, next) => {
+    const {comment_id} = req.params
+
+    removeComment(comment_id).then(() => {
+        res.status(204).send()
+    })
+    .catch(next)
+}
+
+exports.getCommentByCommentId = (req, res, next) => {
+    const {comment_id} = req.params
+    fetchCommentByCommentId(comment_id).then((comment) => {
+        res.status(200).send({comment})
     })
     .catch(next)
 }

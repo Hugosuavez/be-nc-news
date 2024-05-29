@@ -4,6 +4,7 @@ const { getTopics } = require('./controllers/topics.controllers')
 const { getEndpoints } = require('./controllers/endpoints.controller')
 const { getArticleById, getArticles, updateVotes } = require('./controllers/articles.controllers')
 const { getCommentsByArticleId, postCommentByArticleId, deleteComment, getCommentByCommentId } = require('./controllers/comments.controllers')
+const { getUsers } = require('./controllers/users.controllers')
 
 app.use(express.json())
 
@@ -24,6 +25,8 @@ app.patch('/api/articles/:article_id', updateVotes)
 app.delete('/api/comments/:comment_id', deleteComment)
 
 app.get('/api/comments/:comment_id', getCommentByCommentId)
+
+app.get('/api/users', getUsers)
 
 app.use((err, req, res, next) => {
     if(err.msg){

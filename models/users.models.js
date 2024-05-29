@@ -5,3 +5,10 @@ exports.checkUserExists = (username) => {
         if(!rows.length){return Promise.reject({status: 404, msg: '404: Not Found'})}
     })
 }
+
+exports.fetchUsers = () => {
+    return db.query('SELECT * FROM users').then(({rows}) => {
+        console.log(rows)
+        return rows
+    })
+}

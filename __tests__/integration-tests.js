@@ -202,6 +202,24 @@ describe('POST /api/articles/:article_id/comments', () => {
             expect(body.msg).toBe('400: Bad Request')
         })
     })
+    test('400: Bad Request, invalid request body', () => {
+        return request(app)
+        .post('/api/articles/7/comments')
+        .send({})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+    test('400: Bad Request, invalid request body', () => {
+        return request(app)
+        .post('/api/articles/7/comments')
+        .send({username: 1, body: 4})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
 })
 
 describe('PATCH /api/articles/:article_id', () => {

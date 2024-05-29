@@ -155,4 +155,12 @@ describe('GET /api/articles/:article_id/comments', () => {
             expect(body.msg).toBe("404: Not Found")
         })
     })
+    test('200: responds with empty array when article ID exists but there are no comments', () => {
+        return request(app)
+        .get('/api/articles/2/comments')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comments).toHaveLength(0)
+        })
+    })
 })

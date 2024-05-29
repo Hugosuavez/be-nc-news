@@ -355,7 +355,6 @@ describe('GET /api/comments/:comment_id', () => {
         .get('/api/comments/13')
         .expect(200)
         .then(({body}) => {
-            console.log(body.comment)
           expect(body.comment).toMatchObject({
             comment_id: 13,
             body: 'Fruit pastilles',

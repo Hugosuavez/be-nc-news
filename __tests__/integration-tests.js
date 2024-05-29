@@ -203,3 +203,78 @@ describe('POST /api/articles/:article_id/comments', () => {
         })
     })
 })
+
+describe('PATCH /api/articles/:article_id', () => {
+    test('200: responds with the updated article when votes are increased', () => {
+        return request(app)
+        .patch('/api/articles/3')
+        .send({inc_votes: 1})
+        .expect(200)
+        .then(({body}) => {
+            expect(body.patchedArticle).toEqual({
+                article_id: 3,
+                title: 'Eight pug gifs that remind me of mitch',
+                topic: 'mitch',
+                author: 'icellusedkars',
+                body: 'some gifs',
+                created_at: '2020-11-03T09:12:00.000Z',
+                votes: 1,
+                article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+            })
+        })
+    })
+    test('200: responds with the updated article when votes are decreased', () => {
+        return request(app)
+        .patch('/api/articles/3')
+        .send({inc_votes: -30})
+        .expect(200)
+        .then(({body}) => {
+            expect(body.patchedArticle).toEqual({
+                article_id: 3,
+                title: 'Eight pug gifs that remind me of mitch',
+                topic: 'mitch',
+                author: 'icellusedkars',
+                body: 'some gifs',
+                created_at: '2020-11-03T09:12:00.000Z',
+                votes: -30,
+                article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+            })
+        })
+    })
+    test('400: Bad Request, invalid request body', () => {
+        return request(app)
+        .patch('/api/articles/3')
+        .send({article_id: -30})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+    test('400: Bad Request, invalid request body', () => {
+        return request(app)
+        .patch('/api/articles/3')
+        .send({inc_votes: 'string'})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+    test('404: Not Found, article does not exist', () => {
+        return request(app)
+        .patch('/api/articles/99999')
+        .send({inc_votes: 3})
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("404: Not Found")
+        })
+    })
+    test('400: Bad Request, invalid ID data type', () => {
+        return request(app)
+        .patch('/api/articles/string')
+        .send({inc_votes: 3})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+})

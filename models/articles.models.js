@@ -14,3 +14,13 @@ exports.fetchArticles = () => {
         return articles.rows
     })
 }
+
+exports.patchVotes = (inc_votes, article_id) => {
+    if(!inc_votes || typeof inc_votes !== 'number'){
+        return Promise.reject({status: 400, msg: '400: Bad Request'})
+    }
+
+    return db.query('UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *', [inc_votes, article_id]).then(({rows}) => {
+        return rows[0]
+    })
+}

@@ -164,3 +164,42 @@ describe('GET /api/articles/:article_id/comments', () => {
         })
     })
 })
+
+describe('POST /api/articles/:article_id/comments', () => {
+    test('201: responds with newly created comment object', () => {
+        return request(app)
+        .post('/api/articles/7/comments')
+        .send({username: 'rogersop', body: 'A man has got to eat.'})
+        .expect(201)
+        .then(({body}) => {
+            expect(body.comment).toMatchObject({author: 'rogersop', body: 'A man has got to eat.', article_id: 7})
+        })
+    })
+    test('404: Not Found, user does not exist', () => {
+        return request(app)
+        .post('/api/articles/7/comments')
+        .send({username: 'douglas', body: 'A man has got to eat.'})
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("404: Not Found")
+        })
+    })
+    test('404: Not Found, article does not exist', () => {
+        return request(app)
+        .post('/api/articles/99999/comments')
+        .send({username: 'rogersop', body: 'A man has got to eat.'})
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("404: Not Found")
+        })
+    })
+    test('400: Bad Request, invalid ID data type', () => {
+        return request(app)
+        .post('/api/articles/biro/comments')
+        .send({username: 'rogersop', body: 'A man has got to eat.'})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+})

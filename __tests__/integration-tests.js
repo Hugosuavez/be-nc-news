@@ -296,3 +296,91 @@ describe('PATCH /api/articles/:article_id', () => {
         })
     })
 })
+
+
+
+
+describe('DELETE /api/comments/:comment_id', () => {
+
+    test('204: responds with no content', () => {
+        return request(app)
+        .get('/api/comments/13')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comment).toMatchObject({
+                comment_id: 13,
+                body: 'Fruit pastilles',
+                article_id: 1,
+                author: 'icellusedkars',
+                created_at: "2020-06-15T10:25:00.000Z",
+                votes: 0
+              })
+              
+              return request(app)
+              .delete('/api/comments/13')
+              .expect(204)
+        })  
+        .then(({body}) => {
+            expect(body).toEqual({})
+
+          return request(app)
+          .get('/api/comments/13')
+          .expect(404)
+        })
+        .then(({body}) => {
+            expect(body.msg).toBe("404: Not Found")
+        })
+    })
+
+    test('404: Not Found, article does not exist', () => {
+        return request(app)
+        .delete('/api/comments/99999')
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("404: Not Found")
+        })
+    })
+
+    test('400: Bad Request, invalid ID data type', () => {
+        return request(app)
+        .delete('/api/comments/string')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+})
+
+describe('GET /api/comments/:comment_id', () => {
+    test('200: responds with no comment', () => {
+        return request(app)
+        .get('/api/comments/13')
+        .expect(200)
+        .then(({body}) => {
+          expect(body.comment).toMatchObject({
+            comment_id: 13,
+            body: 'Fruit pastilles',
+            article_id: 1,
+            author: 'icellusedkars',
+            created_at: "2020-06-15T10:25:00.000Z",
+            votes: 0
+          })  
+        })
+    })
+    test('404: Not Found, article does not exist', () => {
+        return request(app)
+        .get('/api/comments/99999')
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("404: Not Found")
+        })
+    })
+    test('400: Bad Request, invalid ID data type', () => {
+        return request(app)
+        .get('/api/comments/string')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+})

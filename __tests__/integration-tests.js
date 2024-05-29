@@ -172,7 +172,7 @@ describe('POST /api/articles/:article_id/comments', () => {
         .send({username: 'rogersop', body: 'A man has got to eat.'})
         .expect(201)
         .then(({body}) => {
-            expect(body.comment).toMatchObject({author: 'rogersop', body: 'A man has got to eat.', article_id: 7})
+            expect(body.comment).toMatchObject({comment_id: 19, author: 'rogersop', body: 'A man has got to eat.', article_id: 7, votes: 0, created_at: expect.any(String)})
         })
     })
     test('404: Not Found, user does not exist', () => {
@@ -296,8 +296,6 @@ describe('PATCH /api/articles/:article_id', () => {
         })
     })
 })
-
-
 
 
 describe('DELETE /api/comments/:comment_id', () => {

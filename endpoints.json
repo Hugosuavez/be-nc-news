@@ -62,6 +62,21 @@
         "created_at": "2020-09-19T23:10:00.000Z"
       }
     ]}
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "posts a new comment and returns it",
+    "queries": [],
+    "requestBodyFormat": {"username": "rogersop", "body": "A man has got to eat."}, 
+    "exampleResponse": {
+      "comment_id": 19,
+      "body": "A man has got to eat.",
+      "article_id": 7,
+      "author": "rogersop",
+      "votes": 0,
+      "created_at": "2024-05-29T10:57:08.747Z"
+    }
   }
 }
+
+
 

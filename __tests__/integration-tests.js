@@ -400,3 +400,33 @@ describe('GET /api/users', () => {
         })
     })
 })
+
+describe('GET /api/articles (topic query)', () => {
+    test('200: responds with an array of all articles that are about specified topic', () => {
+    return request(app)
+    .get('/api/articles?topic=mitch')
+    .expect(200)
+    .then(({body}) => {
+        expect(body.articles).toHaveLength(12)
+        body.articles.forEach((article) => {
+            expect(article).toMatchObject({
+                article_id: expect.any(Number),
+                title: expect.any(String),
+                topic: 'mitch',
+                author: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                article_img_url: expect.any(String)
+            })
+        })
+    })
+})
+    test('400: invalid topic', () => {
+        return request(app)
+        .get('/api/articles?topic=cars')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("400: Bad Request")
+        })
+    })
+})

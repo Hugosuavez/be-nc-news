@@ -9,8 +9,18 @@ exports.fetchArticleById = (id) => {
     })
 }
 
-exports.fetchArticles = () => {
-    return db.query('SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY articles.created_at DESC;').then((articles) => {
+exports.fetchArticles = (topic) => {
+    if(!topic){return db.query('SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY articles.created_at DESC;').then((articles) => {
+        return articles.rows
+    })}
+
+
+    const validTopics = ['mitch', 'cats']
+    if(!validTopics.includes(topic)){return Promise.reject({
+        status: 400, msg: "400: Bad Request"
+    })}
+
+    return db.query('SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE topic = $1 GROUP BY articles.article_id ORDER BY articles.created_at DESC;', [topic]).then((articles) => {
         return articles.rows
     })
 }

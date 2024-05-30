@@ -517,3 +517,75 @@ describe('GET /api/users/:username', () => {
         })
     })
 })
+
+describe('PATCH /api/comments/:comment_id', () => {
+    test('200: responds with the updated comment when votes are increased', () => {
+        return request(app)
+        .patch('/api/comments/5')
+        .send({inc_votes: 5})
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comment).toEqual({
+                comment_id: 5,
+                body: 'I hate streaming noses',
+                article_id: 1,
+                author: 'icellusedkars',
+                votes: 5,
+                created_at: "2020-11-03T21:00:00.000Z"
+            })
+        })
+    })
+    test('200: responds with the updated comment when votes are decreased', () => {
+        return request(app)
+        .patch('/api/comments/5')
+        .send({inc_votes: -5})
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comment).toEqual({
+                comment_id: 5,
+                body: 'I hate streaming noses',
+                article_id: 1,
+                author: 'icellusedkars',
+                votes: -5,
+                created_at: "2020-11-03T21:00:00.000Z"
+            })
+        })
+    })
+    test('400: Bad Request, invalid request body', () => {
+        return request(app)
+        .patch('/api/comments/5')
+        .send({article_id: -30})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+    test('400: Bad Request, invalid request body', () => {
+        return request(app)
+        .patch('/api/comments/3')
+        .send({inc_votes: 'string'})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+    test('404: Not Found, comment does not exist', () => {
+        return request(app)
+        .patch('/api/comments/99999')
+        .send({inc_votes: 3})
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("404: Not Found")
+        })
+    })
+    test('400: Bad Request, invalid comment ID data type', () => {
+        return request(app)
+        .patch('/api/comments/string')
+        .send({inc_votes: 3})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+})
+

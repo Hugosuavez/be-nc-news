@@ -460,7 +460,6 @@ describe('GET /api/articles (sorting queries)', () => {
         .get('/api/articles?sort_by=author&order=ASC')
         .expect(200)
         .then(({body}) => {
-            console.log(body.articles)
             expect(body.articles).toHaveLength(13)
             expect(body.articles).toBeSortedBy('author', {descending: false})
             body.articles.forEach((article) => {

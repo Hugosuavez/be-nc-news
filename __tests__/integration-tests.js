@@ -72,7 +72,8 @@ describe('GET /api/articles/:article_id', () => {
                 body: expect.any(String),
                 created_at: expect.any(String),
                 votes: expect.any(Number),
-                article_img_url: expect.any(String)
+                article_img_url: expect.any(String),
+                comment_count: expect.any(Number)
 
             })
         })
@@ -112,7 +113,7 @@ describe('GET /api/articles', () => {
                     created_at: expect.any(String),
                     votes: expect.any(Number),
                     article_img_url: expect.any(String),
-                    comment_count: expect.any(String)
+                    comment_count: expect.any(Number)
                 })
             })
         })
@@ -416,7 +417,8 @@ describe('GET /api/articles (topic query)', () => {
                 author: expect.any(String),
                 created_at: expect.any(String),
                 votes: expect.any(Number),
-                article_img_url: expect.any(String)
+                article_img_url: expect.any(String),
+                comment_count: expect.any(Number)
             })
         })
     })

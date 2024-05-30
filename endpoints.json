@@ -115,7 +115,18 @@
         "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
       }
     ]
+  },
+  "GET /api/users/:username": {
+    "description":"serves up the user who's username matches that in the request",
+    "queries": [],
+    "exampleResponse":  
+      {
+        "username": "butter_bridge",
+        "name": "jonny",
+        "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+      }
   }
+
 }
 
 

@@ -599,3 +599,134 @@ describe('PATCH /api/comments/:comment_id', () => {
     })
 })
 
+describe('POST /api/articles', () => {
+    test('201: responds with newly created article', () => {
+        return request(app)
+        .post('/api/articles')
+        .send({
+            author: "butter_bridge",
+            title: "soap box",
+            body: "I have something to say!",
+            topic: 'cats',
+            article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        })
+        .expect(201)
+        .then(({body}) => {
+            expect(body.completeArticle).toMatchObject({
+                author: "butter_bridge",
+                title: "soap box",
+                body: "I have something to say!",
+                topic: 'cats',
+                article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+                article_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                comment_count: expect.any(Number)
+            })
+        })
+    })
+    test('201: responds with newly created article with article_img_url default', () => {
+        return request(app)
+        .post('/api/articles')
+        .send({
+            author: "butter_bridge",
+            title: "soap box",
+            body: "I have something to say!",
+            topic: 'cats'
+        })
+        .expect(201)
+        .then(({body}) => {
+            expect(body.completeArticle).toMatchObject({
+                author: "butter_bridge",
+                title: "soap box",
+                body: "I have something to say!",
+                topic: 'cats',
+                article_img_url: expect.any(String),
+                article_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                comment_count: expect.any(Number)
+            })
+        })
+    })
+    test('201: responds with newly created article object and ignores unnecessary properties on request object', () => {
+        return request(app)
+        .post('/api/articles')
+        .send({
+            author: "butter_bridge",
+            title: "soap box",
+            body: "I have something to say!",
+            topic: 'cats',
+            article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            test: 'jibberish'
+        })
+        .expect(201)
+        .then(({body}) => {
+            expect(body.completeArticle).toMatchObject({
+                author: "butter_bridge",
+                title: "soap box",
+                body: "I have something to say!",
+                topic: 'cats',
+                article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+                article_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                comment_count: expect.any(Number)
+            })
+    })})
+    test('404: Not Found, user does not exist', () => {
+        return request(app)
+        .post('/api/articles')
+        .send({
+            author: "douglas",
+            title: "soap box",
+            body: "I have something to say!",
+            topic: 'cats',
+            article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        })
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("404: Not Found")
+        })
+    })
+    test('404: Not Found, topic does not exist', () => {
+        return request(app)
+        .post('/api/articles')
+        .send({
+            author: "butter_bridge",
+            title: "soap box",
+            body: "I have something to say!",
+            topic: 'conspiracy theory',
+            article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        })
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("404: Not Found")
+        })
+    })
+    test('400: Bad Request, missing properties in request body', () => {
+        return request(app)
+        .post('/api/articles')
+        .send({})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+    test('400: Bad Request, invalid data types in request body', () => {
+        return request(app)
+        .post('/api/articles')
+        .send({
+            author: 1,
+            title: 1,
+            body: 1,
+            topic: 1,
+            article_img_url: 1
+        })
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+})
+

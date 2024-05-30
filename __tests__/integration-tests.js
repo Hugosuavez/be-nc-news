@@ -432,3 +432,65 @@ describe('GET /api/articles (topic query)', () => {
         })
     })
 })
+
+describe('GET /api/articles (sorting queries)', () => {
+    test('200: responds with array of article objects sorted by given column', () => {
+        return request(app)
+        .get('/api/articles?sort_by=title')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.articles).toHaveLength(13)
+            expect(body.articles).toBeSortedBy('title', {descending: true})
+            body.articles.forEach((article) => {
+                expect(article).toMatchObject({
+                    article_id: expect.any(Number),
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String),
+                    comment_count: expect.any(Number)
+                })
+            })
+        })
+    })
+    test('200: responds with array of article objects sorted by given column and order', () => {
+        return request(app)
+        .get('/api/articles?sort_by=author&order=ASC')
+        .expect(200)
+        .then(({body}) => {
+            console.log(body.articles)
+            expect(body.articles).toHaveLength(13)
+            expect(body.articles).toBeSortedBy('author', {descending: false})
+            body.articles.forEach((article) => {
+                expect(article).toMatchObject({
+                    article_id: expect.any(Number),
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String),
+                    comment_count: expect.any(Number)
+                })
+            })
+        })
+    })
+    test('400: Bad Request, invalid query value', () => {
+        return request(app)
+        .get('/api/articles?sort_by=authr&order=ASC')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("400: Bad Request")
+        })
+    })
+    test('400: Bad Request, invalid query value', () => {
+        return request(app)
+        .get('/api/articles?sort_by=author&order=BSC')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("400: Bad Request")
+        })
+    })
+})

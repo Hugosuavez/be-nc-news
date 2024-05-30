@@ -12,7 +12,10 @@ exports.fetchArticleById = (article_id) => {
 exports.fetchArticles = (topic, sort_by = 'created_at', order = 'DESC') => {
 
     const validSortColumns = ['title', 'topic', 'author', 'created_at', 'votes', 'article_img_url', 'comment_count']
+
     const validOrder = ['ASC', 'DESC']
+
+    const validTopics = ['mitch', 'cats']
 
     if(!validOrder.includes(order)){return Promise.reject({
         status: 400, msg: "400: Bad Request"
@@ -21,18 +24,22 @@ exports.fetchArticles = (topic, sort_by = 'created_at', order = 'DESC') => {
     if(!validSortColumns.includes(sort_by)){return Promise.reject({
         status: 400, msg: "400: Bad Request"
     })}
+    
+    let queryString = `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, CAST(COUNT(comments.article_id) AS int) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id`
+    let queryValues = []
 
-    if(!topic){return db.query(`SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, CAST(COUNT(comments.article_id) AS int) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY ${sort_by} ${order};`).then((articles) => {
-        return articles.rows
-    })}
+    if(topic){
+        if(!validTopics.includes(topic)){
+            return Promise.reject({status: 400, msg: "400: Bad Request"
+        })}
+        queryString += ` WHERE topic = $1`
+        queryValues.push(topic)
+    }
 
+    queryString += ` GROUP BY articles.article_id ORDER BY ${sort_by} ${order};`
+    
 
-    const validTopics = ['mitch', 'cats']
-    if(!validTopics.includes(topic)){return Promise.reject({
-        status: 400, msg: "400: Bad Request"
-    })}
-
-    return db.query(`SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, CAST(COUNT(comments.article_id) AS int) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE topic = $1 GROUP BY articles.article_id ORDER BY ${sort_by} ${order};`, [topic]).then((articles) => {
+    return db.query(queryString, queryValues).then((articles) => {
         return articles.rows
     })
 }

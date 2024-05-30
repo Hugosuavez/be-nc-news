@@ -176,6 +176,15 @@ describe('POST /api/articles/:article_id/comments', () => {
             expect(body.comment).toMatchObject({comment_id: 19, author: 'rogersop', body: 'A man has got to eat.', article_id: 7, votes: 0, created_at: expect.any(String)})
         })
     })
+    test('201: responds with newly created comment object and ignores unnecessary properties on request object', () => {
+        return request(app)
+        .post('/api/articles/7/comments')
+        .send({username: 'rogersop', body: 'A man has got to eat.', test: 9})
+        .expect(201)
+        .then(({body}) => {
+            expect(body.comment).toMatchObject({comment_id: 19, author: 'rogersop', body: 'A man has got to eat.', article_id: 7, votes: 0, created_at: expect.any(String)})
+        })
+    })
     test('404: Not Found, user does not exist', () => {
         return request(app)
         .post('/api/articles/7/comments')
@@ -221,6 +230,7 @@ describe('POST /api/articles/:article_id/comments', () => {
             expect(body.msg).toBe('400: Bad Request')
         })
     })
+    
 })
 
 describe('PATCH /api/articles/:article_id', () => {

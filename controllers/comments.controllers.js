@@ -1,4 +1,4 @@
-const { fetchCommentsByArticleId, createCommentByArticleId, removeComment, fetchCommentByCommentId } = require('../models/comments.models')
+const { fetchCommentsByArticleId, createCommentByArticleId, removeComment, fetchCommentByCommentId, patchComment, checkCommentExists } = require('../models/comments.models')
 const { checkArticleExists } = require('../models/checkArticleExists.model')
 const { checkUserExists } = require('../models/users.models')
 
@@ -42,6 +42,18 @@ exports.deleteComment = (req, res, next) => {
 exports.getCommentByCommentId = (req, res, next) => {
     const {comment_id} = req.params
     fetchCommentByCommentId(comment_id).then((comment) => {
+        res.status(200).send({comment})
+    })
+    .catch(next)
+}
+
+exports.updateComment = (req, res, next) => {
+    const { inc_votes } = req.body
+    const { comment_id } = req.params
+    const promises = [checkCommentExists(comment_id), patchComment(inc_votes, comment_id)]
+
+    Promise.all(promises).then((resolvedPromises) => {
+        const comment = resolvedPromises[1]
         res.status(200).send({comment})
     })
     .catch(next)

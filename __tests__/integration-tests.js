@@ -493,3 +493,27 @@ describe('GET /api/articles (sorting queries)', () => {
         })
     })
 })
+
+describe('GET /api/users/:username', () => {
+    test('200: responds with the user that matches with the username on the request', () => {
+        return request(app)
+        .get('/api/users/butter_bridge')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.user).toEqual({ 
+                username: 'butter_bridge',
+                name: 'jonny',
+                avatar_url:
+                  'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'
+            })
+        })
+    })
+    test('404: Not Found, user does not exist', () => {
+        return request(app)
+        .get('/api/users/douglas')
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("404: Not Found")
+        })
+    })
+})

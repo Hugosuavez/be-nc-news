@@ -1,6 +1,7 @@
 const db = require('../db/connection')
 
 exports.fetchArticleById = (article_id) => {
+    
     return db.query('SELECT articles.*, CAST(COUNT(comments.article_id) AS int) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id;', [article_id]).then((response) => {
         if(response.rows.length === 0){
             return Promise.reject({status: 404, msg: '404: Not Found'})
@@ -50,6 +51,14 @@ exports.patchVotes = (inc_votes, article_id) => {
     }
 
     return db.query('UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *', [inc_votes, article_id]).then(({rows}) => {
+        return rows[0]
+    })
+}
+
+exports.createArticle = (author, title, body, topic, article_img_url = 'https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700') => {
+    if(!author || !title || !body || !topic || typeof author !== 'string' || typeof title !== 'string' || typeof body !== 'string' || typeof topic !== 'string'){return Promise.reject({status: 400, msg: '400: Bad Request'})}
+    
+    return db.query('INSERT INTO articles (author, title, body, topic, article_img_url) VALUES ($1, $2, $3, $4, $5) RETURNING *;', [author, title, body, topic, article_img_url]).then(({rows}) => {
         return rows[0]
     })
 }

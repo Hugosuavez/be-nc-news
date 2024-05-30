@@ -1,5 +1,7 @@
-const { fetchArticleById, fetchArticles, patchVotes } = require('../models/articles.models')
+const { fetchArticleById, fetchArticles, patchVotes, createArticle } = require('../models/articles.models')
 const { checkArticleExists } = require('../models/checkArticleExists.model')
+const { checkUserExists } = require('../models/users.models')
+const { checkTopicExists } = require('../models/topics.models')
 
 exports.getArticleById = (req, res, next) => {
     const { article_id } = req.params
@@ -24,6 +26,21 @@ exports.updateVotes = (req, res, next) => {
     Promise.all(promises).then((resolvedPromises) => {
         const patchedArticle = resolvedPromises[1]
         res.status(200).send({patchedArticle})
+    })
+    .catch(next)
+}
+
+exports.postArticle = (req, res, next) => {
+    const {author, title, body, topic, article_img_url} = req.body
+    
+    const promises = [checkTopicExists(topic),checkUserExists(author), createArticle(author, title, body, topic, article_img_url)]
+
+    Promise.all(promises).then((resolvedPromises) => {
+        const article = resolvedPromises[2].article_id
+
+        return fetchArticleById(article)
+    }).then((completeArticle) => {
+        res.status(201).send({completeArticle})
     })
     .catch(next)
 }

@@ -10,9 +10,15 @@ exports.fetchArticleById = (article_id) => {
     })
 }
 
-exports.fetchArticles = (topic, sort_by = 'created_at', order = 'DESC') => {
+exports.countArticles = () => {
+    return db.query('SELECT * FROM articles').then(({rows}) => {
+        return rows.length
+    })
+}
 
-    const validSortColumns = ['title', 'topic', 'author', 'created_at', 'votes', 'article_img_url', 'comment_count']
+exports.fetchArticles = (topic, sort_by = 'created_at', order = 'DESC', limit = 10, p) => {
+
+    const validSortColumns = ['article_id', 'title', 'topic', 'author', 'created_at', 'votes', 'article_img_url', 'comment_count']
 
     const validOrder = ['ASC', 'DESC']
 
@@ -37,8 +43,16 @@ exports.fetchArticles = (topic, sort_by = 'created_at', order = 'DESC') => {
         queryValues.push(topic)
     }
 
-    queryString += ` GROUP BY articles.article_id ORDER BY ${sort_by} ${order};`
+    queryString += ` GROUP BY articles.article_id ORDER BY ${sort_by} ${order}`
     
+    if(limit){
+        queryString += ` LIMIT ${limit}`
+    }
+
+    if(p){
+        const page = (p-1)*limit
+        queryString += ` OFFSET ${page}`
+    }
 
     return db.query(queryString, queryValues).then((articles) => {
         return articles.rows

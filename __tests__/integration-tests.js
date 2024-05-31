@@ -102,7 +102,7 @@ describe('GET /api/articles', () => {
         .get('/api/articles')
         .expect(200)
         .then(({body}) => {
-            expect(body.articles).toHaveLength(13)
+            expect(body.articles).toHaveLength(10)
             expect(body.articles).toBeSortedBy('created_at', {descending: true})
             body.articles.forEach((article) => {
                 expect(article).toMatchObject({
@@ -418,7 +418,7 @@ describe('GET /api/articles (topic query)', () => {
     .get('/api/articles?topic=mitch')
     .expect(200)
     .then(({body}) => {
-        expect(body.articles).toHaveLength(12)
+        expect(body.articles).toHaveLength(10)
         body.articles.forEach((article) => {
             expect(article).toMatchObject({
                 article_id: expect.any(Number),
@@ -449,7 +449,7 @@ describe('GET /api/articles (sorting queries)', () => {
         .get('/api/articles?sort_by=title')
         .expect(200)
         .then(({body}) => {
-            expect(body.articles).toHaveLength(13)
+            expect(body.articles).toHaveLength(10)
             expect(body.articles).toBeSortedBy('title', {descending: true})
             body.articles.forEach((article) => {
                 expect(article).toMatchObject({
@@ -470,7 +470,7 @@ describe('GET /api/articles (sorting queries)', () => {
         .get('/api/articles?sort_by=author&order=ASC')
         .expect(200)
         .then(({body}) => {
-            expect(body.articles).toHaveLength(13)
+            expect(body.articles).toHaveLength(10)
             expect(body.articles).toBeSortedBy('author', {descending: false})
             body.articles.forEach((article) => {
                 expect(article).toMatchObject({
@@ -730,3 +730,29 @@ describe('POST /api/articles', () => {
     })
 })
 
+describe('GET /api/articles (pagination)', () => {
+    test('200: responds with array of articles with an amount set by limit', () => {
+        return request(app)
+        .get('/api/articles?limit=10')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.articles).toHaveLength(10)
+        })
+    })
+    test('200: responds with array of articles with an amount set by limit starting from specified page, with a total count property of all articles', () => {
+        return request(app)
+        .get('/api/articles?limit=5&p=2&sort_by=article_id&order=ASC')
+        .expect(200)
+        .then(({body}) => {
+            console.log(body)
+            let articles = body.articles
+            expect(articles).toHaveLength(5)
+            expect(articles[0].article_id).toBe(6)
+            expect(articles[1].article_id).toBe(7)
+            expect(articles[2].article_id).toBe(8)
+            expect(articles[3].article_id).toBe(9)
+            expect(articles[4].article_id).toBe(10)
+            expect(body.total_count).toBe(13)
+        })
+    })
+})

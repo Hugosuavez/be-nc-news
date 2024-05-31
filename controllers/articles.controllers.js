@@ -1,4 +1,4 @@
-const { fetchArticleById, fetchArticles, patchVotes, createArticle } = require('../models/articles.models')
+const { fetchArticleById, fetchArticles, patchVotes, createArticle, countArticles } = require('../models/articles.models')
 const { checkArticleExists } = require('../models/checkArticleExists.model')
 const { checkUserExists } = require('../models/users.models')
 const { checkTopicExists } = require('../models/topics.models')
@@ -12,9 +12,15 @@ exports.getArticleById = (req, res, next) => {
 }
 
 exports.getArticles = (req, res, next) => {
-    const {topic, sort_by, order} = req.query
-    fetchArticles(topic, sort_by, order).then((articles) => {
-        res.status(200).send({ articles })
+    const {topic, sort_by, order, limit, p} = req.query
+
+    const promises = [countArticles(), fetchArticles(topic, sort_by, order, limit, p)]
+
+
+    Promise.all(promises).then((resolvedPromises) => {
+        const total_count = resolvedPromises[0]
+        const articles = resolvedPromises[1]
+        res.status(200).send({ articles,  total_count })
     })
     .catch(next)
 }

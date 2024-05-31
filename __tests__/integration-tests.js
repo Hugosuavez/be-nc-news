@@ -744,7 +744,6 @@ describe('GET /api/articles (pagination)', () => {
         .get('/api/articles?limit=5&p=2&sort_by=article_id&order=ASC')
         .expect(200)
         .then(({body}) => {
-            console.log(body)
             let articles = body.articles
             expect(articles).toHaveLength(5)
             expect(articles[0].article_id).toBe(6)

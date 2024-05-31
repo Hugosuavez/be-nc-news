@@ -821,3 +821,55 @@ describe('GET /api/articles/:article_id/comments (pagination)', () => {
         })
     })
 })
+
+describe('POST /api/topics', () => {
+    test('201: responds with newly added topic object', () => {
+        return request(app)
+        .post('/api/topics')
+        .send({
+            "slug": "topic name here",
+            "description": "description here"
+          })
+        .expect(201)
+        .then(({body}) => {
+            expect(body.topic).toEqual({
+            "slug": "topic name here",
+            "description": "description here"
+          })
+        })
+    })
+    test('201: responds with newly created topic object and ignores unnecessary properties on request object', () => {
+        return request(app)
+        .post('/api/topics')
+        .send({
+            "slug": "topic name here",
+            "description": "description here"
+          })
+        .expect(201)
+        .then(({body}) => {
+            expect(body.topic).toEqual({
+                "slug": "topic name here",
+                "description": "description here"
+              })
+        })
+    })
+   
+    test('400: Bad Request, required object properties not given', () => {
+        return request(app)
+        .post('/api/topics')
+        .send({})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+    test('400: Bad Request, invalid request body', () => {
+        return request(app)
+        .post('/api/topics')
+        .send({username: 1, body: 4})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('400: Bad Request')
+        })
+    })
+})

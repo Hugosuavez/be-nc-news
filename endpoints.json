@@ -79,7 +79,7 @@
       "created_at": "2024-05-29T10:57:08.747Z"
     }
   },
-  "PATCH /api/articles/:article_id": {"description": "patches the matching article by increasing or decreasing the value of votes",
+  "PATCH /api/articles/:article_id": {"description": "patches the article matching article_id by increasing or decreasing the value of votes",
   "queries": [],
   "requestBodyFormat": {"inc_votes": 1},
   "exampleResponse": {
@@ -156,7 +156,7 @@
   }
   },
   "POST /api/articles": {
-    "description": "posts a new comment and returns it",
+    "description": "posts a new article and returns it",
     "queries": [],
     "requestBodyFormat": {
       "author": "butter_bridge",
@@ -176,6 +176,18 @@
       "created_at": "2020-11-03T21:00:00.000Z",
       "comment_count": 4
   }
+  },
+  "POST /api/topics": {
+    "description": "posts a new topic and returns it",
+    "queries": [],
+    "requestBodyFormat": {
+      "slug": "topic name here",
+      "description": "description here"
+    },
+    "exampleResponse": {
+      "slug": "topic name here",
+      "description": "description here"
+    }
   }
 
 }

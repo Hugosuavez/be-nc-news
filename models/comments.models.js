@@ -1,7 +1,15 @@
 const db = require('../db/connection')
 
-exports.fetchCommentsByArticleId = (article_id) => {
-    return db.query('SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at ASC', [article_id]).then((comments) => {
+
+exports.fetchCommentsByArticleId = (article_id, limit = 10, p) => {
+    let queryString = 'SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at ASC LIMIT $2'
+    const queryValues = [article_id, limit]
+    if(p){
+        const page = (p-1)*limit
+        queryValues.push(page)
+        queryString += ` OFFSET $3`
+    }
+    return db.query(queryString, queryValues).then((comments) => {
         return comments.rows
     })
 }

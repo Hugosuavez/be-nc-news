@@ -1,4 +1,4 @@
-const { fetchCommentsByArticleId, createCommentByArticleId, removeComment, fetchCommentByCommentId, patchComment, checkCommentExists } = require('../models/comments.models')
+const { fetchCommentsByArticleId, createCommentByArticleId, removeComment, fetchCommentByCommentId, patchComment, checkCommentExists,  } = require('../models/comments.models')
 const { checkArticleExists } = require('../models/checkArticleExists.model')
 const { checkUserExists } = require('../models/users.models')
 
@@ -6,13 +6,15 @@ const { checkUserExists } = require('../models/users.models')
 
 exports.getCommentsByArticleId = (req, res, next) => {
     const {article_id} = req.params
-
-    const promises = [fetchCommentsByArticleId(article_id), checkArticleExists(article_id)]
+    const {limit, p} = req.query
+    
+    const promises = [fetchCommentsByArticleId(article_id, limit, p), checkArticleExists(article_id)]
 
     Promise.all(promises)
     .then((resolvedPromises) => {
         const comments = resolvedPromises[0]
-        res.status(200).send({ comments })
+        
+        res.status(200).send({ comments})
     })
     .catch(next)
 }

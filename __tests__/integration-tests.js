@@ -730,7 +730,7 @@ describe('POST /api/articles', () => {
     })
 })
 
-describe('GET /api/articles (pagination)', () => {
+describe.only('GET /api/articles (pagination)', () => {
     test('200: responds with array of articles with an amount set by limit', () => {
         return request(app)
         .get('/api/articles?limit=10')
@@ -744,7 +744,7 @@ describe('GET /api/articles (pagination)', () => {
         .get('/api/articles?limit=5&p=2&sort_by=article_id&order=ASC')
         .expect(200)
         .then(({body}) => {
-            let articles = body.articles
+            const articles = body.articles
             expect(articles).toHaveLength(5)
             expect(articles[0].article_id).toBe(6)
             expect(articles[1].article_id).toBe(7)
@@ -752,6 +752,22 @@ describe('GET /api/articles (pagination)', () => {
             expect(articles[3].article_id).toBe(9)
             expect(articles[4].article_id).toBe(10)
             expect(body.total_count).toBe(13)
+        })
+    })
+    test('400: Bad Request, invalid limit data type', () => {
+        return request(app)
+        .get('/api/articles?limit=string&p=2&sort_by=article_id&order=ASC')
+        .expect(400)
+        .then(({body}) => {
+         expect(body.msg).toBe("400: Bad Request")
+        })
+    })
+    test('400: Bad Request, invalid page number data type', () => {
+        return request(app)
+        .get('/api/articles?limit=5&p=cx')
+        .expect(400)
+        .then(({body}) => {
+         expect(body.msg).toBe("400: Bad Request")
         })
     })
 })

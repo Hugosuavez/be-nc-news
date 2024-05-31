@@ -1,6 +1,6 @@
   {
   "GET /api": {
-    "description": "serves up a json representation of all the available endpoints of the api"
+    "description": "serves a json representation of all the available endpoints of the api"
   },
   "GET /api/topics": {
     "description": "serves an array of all topics",
@@ -10,7 +10,7 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of articles set to a default limit of 10 articles per page and a total count of the articles discounting the limit",
+    "description": "serves an array of articles set to a default limit of 10 results per page and a total count of the articles discounting the limit",
     "queries": ["topic", "sort_by", "order", "limit", "p"],
     "exampleResponse": {
       "articles": [
@@ -45,8 +45,8 @@
   } }
   },
   "GET /api/articles/:article_id/comments": {
-    "description": "serves up an array of comments with a given article_id, sorted by date created in ascending order",
-    "queries": [],
+    "description": "serves an array of comments with a given article_id, sorted by date created in ascending order, set to a default limit of 10 results per page",
+    "queries": ["limit", "p"],
     "exampleResponse": {"comments":[
       {
         "comment_id": 10,
@@ -100,7 +100,7 @@
     "exampleResponse": {}
   },
   "GET /api/comments/:comment_id": {
-    "description": "serves up a comment based on specific comment_id",
+    "description": "serves a comment based on specific comment_id",
     "queries": [],
     "exampleResponse": {
       "comment_id": 13,
@@ -133,7 +133,7 @@
     ]
   },
   "GET /api/users/:username": {
-    "description":"serves up the user who's username matches that in the request",
+    "description":"serves the user who's username matches that in the request",
     "queries": [],
     "exampleResponse":  
       {

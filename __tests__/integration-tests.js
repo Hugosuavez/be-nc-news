@@ -730,7 +730,7 @@ describe('POST /api/articles', () => {
     })
 })
 
-describe.only('GET /api/articles (pagination)', () => {
+describe('GET /api/articles (pagination)', () => {
     test('200: responds with array of articles with an amount set by limit', () => {
         return request(app)
         .get('/api/articles?limit=10')
@@ -765,6 +765,56 @@ describe.only('GET /api/articles (pagination)', () => {
     test('400: Bad Request, invalid page number data type', () => {
         return request(app)
         .get('/api/articles?limit=5&p=cx')
+        .expect(400)
+        .then(({body}) => {
+         expect(body.msg).toBe("400: Bad Request")
+        })
+    })
+})
+
+describe('GET /api/articles/:article_id/comments (pagination)', () => {
+    test('200: responds with array of comments with an amount set by limit', () => {
+        return request(app)
+        .get('/api/articles/1/comments?limit=5')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comments).toHaveLength(5)
+        })
+    })
+    test('200: responds with array of comments with an amount set by limit, defaults to 10', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comments).toHaveLength(10)
+        })
+    })
+    test('200: responds with array of comments with an amount set by limit starting from specified page', () => {
+        return request(app)
+        .get('/api/articles/1/comments?limit=5&p=2')
+        .expect(200)
+        .then(({body}) => {
+            const comments = body.comments
+            expect(comments).toHaveLength(5)
+            expect(comments[0].created_at).toBe("2020-04-14T20:19:00.000Z")
+            expect(comments[1].created_at).toBe('2020-05-15T20:19:00.000Z')
+            expect(comments[2].created_at).toBe('2020-06-15T10:25:00.000Z')
+            expect(comments[3].created_at).toBe('2020-07-21T00:20:00.000Z')
+            expect(comments[4].created_at).toBe('2020-10-31T03:03:00.000Z')
+            
+        })
+    })
+    test('400: Bad Request, invalid limit data type', () => {
+        return request(app)
+        .get('/api/articles/1/comments?limit=string&p=2&sort_by=article_id&order=ASC')
+        .expect(400)
+        .then(({body}) => {
+         expect(body.msg).toBe("400: Bad Request")
+        })
+    })
+    test('400: Bad Request, invalid page number data type', () => {
+        return request(app)
+        .get('/api/articles/1/comments?limit=5&p=cx')
         .expect(400)
         .then(({body}) => {
          expect(body.msg).toBe("400: Bad Request")

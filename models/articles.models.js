@@ -44,16 +44,16 @@ exports.fetchArticles = (topic, sort_by = 'created_at', order = 'DESC', limit = 
     }
 
     queryString += ` GROUP BY articles.article_id ORDER BY ${sort_by} ${order}`
+    queryValues.push(Number(limit))
     
-    if(limit){
-        queryString += ` LIMIT ${limit}`
-    }
+    queryString += ` LIMIT $${queryValues.length}`
 
     if(p){
         const page = (p-1)*limit
-        queryString += ` OFFSET ${page}`
+        queryValues.push(page)
+        queryString += ` OFFSET $${queryValues.length}`
     }
-
+    
     return db.query(queryString, queryValues).then((articles) => {
         return articles.rows
     })

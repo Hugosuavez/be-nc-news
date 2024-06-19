@@ -13,7 +13,8 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getArticles = (req, res, next) => {
     const {topic, sort_by, order, limit, p} = req.query
-    const promises = [countArticles(), fetchArticles(topic, sort_by, order, limit, p), ]
+    
+    const promises = [countArticles(topic), fetchArticles(topic, sort_by, order, limit, p), ]
     if(topic){promises.push(checkTopicExists(topic))}
     
 

@@ -13,9 +13,9 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getArticles = (req, res, next) => {
     const {topic, sort_by, order, limit, p} = req.query
-
-    const promises = [countArticles(), fetchArticles(topic, sort_by, order, limit, p)]
-
+    const promises = [countArticles(), fetchArticles(topic, sort_by, order, limit, p), ]
+    if(topic){promises.push(checkTopicExists(topic))}
+    
 
     Promise.all(promises).then((resolvedPromises) => {
         const total_count = resolvedPromises[0]

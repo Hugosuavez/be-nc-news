@@ -14,7 +14,7 @@ exports.getCommentsByArticleId = (req, res, next) => {
     .then((resolvedPromises) => {
         const comments = resolvedPromises[0]
         
-        res.status(200).send({ comments})
+        res.status(200).send({ comments })
     })
     .catch(next)
 }

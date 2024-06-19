@@ -433,12 +433,12 @@ describe('GET /api/articles (topic query)', () => {
         })
     })
 })
-    test('400: invalid topic', () => {
+    test('404: invalid topic', () => {
         return request(app)
         .get('/api/articles?topic=cars')
-        .expect(400)
+        .expect(404)
         .then(({body}) => {
-            expect(body.msg).toBe("400: Bad Request")
+            expect(body.msg).toBe("404: Not Found")
         })
     })
 })

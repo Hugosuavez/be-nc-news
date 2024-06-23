@@ -1,6 +1,6 @@
 # Northcoders News API
 
-### https://be-nc-news-unk8.onrender.com
+### https://be-nc-news-unk8.onrender.com/api
 
 ### Introduction
  NC News is an api for accessing a news database of articles, comments, topics and users. Clients can access this data via a variety of endpoints. Valid users can post new articles and comments. Full documentation is provided in the endpoints.json file.

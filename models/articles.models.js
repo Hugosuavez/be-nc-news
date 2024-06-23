@@ -30,7 +30,6 @@ exports.fetchArticles = (topic, sort_by = 'created_at', order = 'DESC', limit = 
 
     const validOrder = ['ASC', 'DESC']
 
-    // const validTopics = ['mitch', 'cats']
 
     if(!validOrder.includes(order)){return Promise.reject({
         status: 400, msg: "400: Bad Request"
@@ -45,9 +44,6 @@ exports.fetchArticles = (topic, sort_by = 'created_at', order = 'DESC', limit = 
     let queryValues = []
 
     if(topic){
-        // if(!validTopics.includes(topic)){
-        //     return Promise.reject({status: 400, msg: "400: Bad Request"
-        // })}
         queryString += ` WHERE topic = $1`
         queryValues.push(topic)
     }

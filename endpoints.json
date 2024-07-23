@@ -1,4 +1,4 @@
-  {
+{
   "GET /api": {
     "description": "serves a json representation of all the available endpoints of the api"
   },
@@ -31,45 +31,51 @@
   "GET /api/articles/:article_id": {
     "description": "serves an article based on specific article_id including a total count of comments",
     "queries": [],
-    "exampleResponse": {"article": {
-      "article_id": 1,
-      "title": "Living in the shadow of a great man",
-      "topic": "mitch",
-      "author": "butter_bridge",
-      "body": "I find this existence challenging",
-      "created_at": "2020-07-09T20:11:00.000Z",
-      "votes": 100,
-      "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-      "comment_count": 11
-
-  } }
+    "exampleResponse": {
+      "article": {
+        "article_id": 1,
+        "title": "Living in the shadow of a great man",
+        "topic": "mitch",
+        "author": "butter_bridge",
+        "body": "I find this existence challenging",
+        "created_at": "2020-07-09T20:11:00.000Z",
+        "votes": 100,
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        "comment_count": 11
+      }
+    }
   },
   "GET /api/articles/:article_id/comments": {
     "description": "serves an array of comments with a given article_id, sorted by date created in ascending order, set to a default limit of 10 results per page",
     "queries": ["limit", "p"],
-    "exampleResponse": {"comments":[
-      {
-        "comment_id": 10,
-        "body": "git push origin master",
-        "article_id": 3,
-        "author": "icellusedkars",
-        "votes": 0,
-        "created_at": "2020-06-20T07:24:00.000Z"
-      },
-      {
-        "comment_id": 11,
-        "body": "Ambidextrous marsupial",
-        "article_id": 3,
-        "author": "icellusedkars",
-        "votes": 0,
-        "created_at": "2020-09-19T23:10:00.000Z"
-      }
-    ]}
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 10,
+          "body": "git push origin master",
+          "article_id": 3,
+          "author": "icellusedkars",
+          "votes": 0,
+          "created_at": "2020-06-20T07:24:00.000Z"
+        },
+        {
+          "comment_id": 11,
+          "body": "Ambidextrous marsupial",
+          "article_id": 3,
+          "author": "icellusedkars",
+          "votes": 0,
+          "created_at": "2020-09-19T23:10:00.000Z"
+        }
+      ]
+    }
   },
   "POST /api/articles/:article_id/comments": {
     "description": "posts a new comment and returns it",
     "queries": [],
-    "requestBodyFormat": {"username": "rogersop", "body": "A man has got to eat."}, 
+    "requestBodyFormat": {
+      "username": "rogersop",
+      "body": "A man has got to eat."
+    },
     "exampleResponse": {
       "comment_id": 19,
       "body": "A man has got to eat.",
@@ -79,20 +85,20 @@
       "created_at": "2024-05-29T10:57:08.747Z"
     }
   },
-  "PATCH /api/articles/:article_id": {"description": "patches the article matching article_id by increasing or decreasing the value of votes",
-  "queries": [],
-  "requestBodyFormat": {"inc_votes": 1},
-  "exampleResponse": {
-    "article_id": 3,
-    "title": "Eight pug gifs that remind me of mitch",
-    "topic": "mitch",
-    "author": "icellusedkars",
-    "body": "some gifs",
-    "created_at": "2020-11-03T09:12:00.000Z",
-    "votes": 1,
-    "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
-}
-
+  "PATCH /api/articles/:article_id": {
+    "description": "patches the article matching article_id by increasing or decreasing the value of votes",
+    "queries": [],
+    "requestBodyFormat": { "inc_votes": 1 },
+    "exampleResponse": {
+      "article_id": 3,
+      "title": "Eight pug gifs that remind me of mitch",
+      "topic": "mitch",
+      "author": "icellusedkars",
+      "body": "some gifs",
+      "created_at": "2020-11-03T09:12:00.000Z",
+      "votes": 1,
+      "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+    }
   },
   "DELETE /api/comments/:comment_id": {
     "description": "deletes comment if matching comment_id",
@@ -112,9 +118,9 @@
     }
   },
   "GET /api/users": {
-    "description":"serves an array of all users",
+    "description": "serves an array of all users",
     "queries": [],
-    "exampleResponse":  [
+    "exampleResponse": [
       {
         "username": "butter_bridge",
         "name": "jonny",
@@ -133,19 +139,18 @@
     ]
   },
   "GET /api/users/:username": {
-    "description":"serves the user who's username matches that in the request",
+    "description": "serves the user who's username matches that in the request",
     "queries": [],
-    "exampleResponse":  
-      {
-        "username": "butter_bridge",
-        "name": "jonny",
-        "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
-      }
+    "exampleResponse": {
+      "username": "butter_bridge",
+      "name": "jonny",
+      "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+    }
   },
   "PATCH /api/comments/:comment_id": {
     "description": "patches the matching comment by increasing or decreasing the value of votes",
     "queries": [],
-    "requestBodyFormat": {"inc_votes": 1},
+    "requestBodyFormat": { "inc_votes": 1 },
     "exampleResponse": {
       "comment_id": 5,
       "body": "I hate streaming noses",
@@ -153,7 +158,7 @@
       "author": "icellusedkars",
       "votes": -5,
       "created_at": "2020-11-03T21:00:00.000Z"
-  }
+    }
   },
   "POST /api/articles": {
     "description": "posts a new article and returns it",
@@ -164,7 +169,7 @@
       "body": "I have something to say!",
       "topic": "cats",
       "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
-  }, 
+    },
     "exampleResponse": {
       "author": "butter_bridge",
       "title": "soap box",
@@ -175,7 +180,7 @@
       "votes": 2,
       "created_at": "2020-11-03T21:00:00.000Z",
       "comment_count": 4
-  }
+    }
   },
   "POST /api/topics": {
     "description": "posts a new topic and returns it",
@@ -189,8 +194,4 @@
       "description": "description here"
     }
   }
-
 }
-
-
-

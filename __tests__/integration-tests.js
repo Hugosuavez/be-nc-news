@@ -125,7 +125,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .expect(200)
       .then(({ body }) => {
         expect(body.comments).toHaveLength(2);
-        expect(body.comments).toBeSortedBy("created_at", { descending: false });
+        expect(body.comments).toBeSortedBy("created_at", { descending: true });
         body.comments.forEach((comment) => {
           expect(comment).toMatchObject({
             comment_id: expect.any(Number),
@@ -811,10 +811,10 @@ describe("GET /api/articles/:article_id/comments (pagination)", () => {
         const comments = body.comments;
         expect(comments).toHaveLength(5);
         expect(comments[0].created_at).toBe("2020-04-14T20:19:00.000Z");
-        expect(comments[1].created_at).toBe("2020-05-15T20:19:00.000Z");
-        expect(comments[2].created_at).toBe("2020-06-15T10:25:00.000Z");
-        expect(comments[3].created_at).toBe("2020-07-21T00:20:00.000Z");
-        expect(comments[4].created_at).toBe("2020-10-31T03:03:00.000Z");
+        expect(comments[1].created_at).toBe("2020-04-11T21:02:00.000Z");
+        expect(comments[2].created_at).toBe("2020-03-02T07:10:00.000Z");
+        expect(comments[3].created_at).toBe("2020-03-01T01:13:00.000Z");
+        expect(comments[4].created_at).toBe("2020-02-23T12:01:00.000Z");
       });
   });
   test("400: Bad Request, invalid limit data type", () => {

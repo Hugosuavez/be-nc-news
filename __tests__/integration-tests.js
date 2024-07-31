@@ -5,6 +5,8 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/index");
 const endpointsData = require("../endpoints.json");
 
+
+
 afterAll(() => {
   return db.end();
 });
@@ -224,7 +226,7 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("400: Bad Request");
       });
   });
-  test("400: Bad Request, invalid request body", () => {
+  test("400: Bad Request, empty request body", () => {
     return request(app)
       .post("/api/articles/7/comments")
       .send({})
@@ -283,7 +285,7 @@ describe("PATCH /api/articles/:article_id", () => {
         });
       });
   });
-  test("400: Bad Request, invalid request body", () => {
+  test("400: Bad Request, invalid table column", () => {
     return request(app)
       .patch("/api/articles/3")
       .send({ article_id: -30 })
@@ -292,7 +294,7 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(body.msg).toBe("400: Bad Request");
       });
   });
-  test("400: Bad Request, invalid request body", () => {
+  test("400: Bad Request, invalid vote data type", () => {
     return request(app)
       .patch("/api/articles/3")
       .send({ inc_votes: "string" })
@@ -493,7 +495,7 @@ describe("GET /api/articles (sorting queries)", () => {
         });
       });
   });
-  test("400: Bad Request, invalid query value", () => {
+  test("400: Bad Request, invalid column", () => {
     return request(app)
       .get("/api/articles?sort_by=authr&order=ASC")
       .expect(400)
@@ -501,7 +503,7 @@ describe("GET /api/articles (sorting queries)", () => {
         expect(body.msg).toBe("400: Bad Request");
       });
   });
-  test("400: Bad Request, invalid query value", () => {
+  test("400: Bad Request, invalid order query", () => {
     return request(app)
       .get("/api/articles?sort_by=author&order=BSC")
       .expect(400)
@@ -568,7 +570,7 @@ describe("PATCH /api/comments/:comment_id", () => {
         });
       });
   });
-  test("400: Bad Request, invalid request body", () => {
+  test("400: Bad Request, invalid table column", () => {
     return request(app)
       .patch("/api/comments/5")
       .send({ article_id: -30 })
@@ -577,7 +579,7 @@ describe("PATCH /api/comments/:comment_id", () => {
         expect(body.msg).toBe("400: Bad Request");
       });
   });
-  test("400: Bad Request, invalid request body", () => {
+  test("400: Bad Request, invalid vote data type", () => {
     return request(app)
       .patch("/api/comments/3")
       .send({ inc_votes: "string" })
